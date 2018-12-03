@@ -1,0 +1,187 @@
+EXECUTIVE SUMMARY
+
+Purpose: 
+Given that a fastball is thrown, develop a predictive model to estimate that a SwingStrike will occur.
+
+Data: 
+Trackman pitch-level data for ~500k pitches representing 30 teams playing each other over 2,394 games.  Approximately 390K of these pitches are fastballs given by 736 pitchers to 938 batters. 6.84% of these fastballs result in a swingstrike
+
+Methodology: 
+The data are examined in two ways:
+I. Logistic Regression
+II. Random Forest Analysis (two iterations)
+
+Comments:
+	Methodology:			Accuracy:	Sensitivity:	Specificity:	P-value:
+	Logit Model			0.9294 		1.0000		0.0000		0.5075
+	Random Forest - 1		0.9293		0.999184	0.001103	0.5532
+	Random Forest - 2		0.9294		0.9999		0.0000		0.5304
+
+	Consistent results across all methodologies which are not statistically significant.  
+	Given the rarity of the predicted outcome, next steps would
+	require further development of the model to address the imbalance in the data set.
+	However, results of the factor importance as discovered in the random forest algorithm
+	suggests opportunities for improving/evaluating player performance.
+
+Results:
+I. Logit Model:
+	Generalized Linear Model 
+
+	269723 samples
+	    26 predictors
+	     2 classes: 'FALSE', 'TRUE' 
+
+	No pre-processing
+	Resampling: Cross-Validated (3 fold) 
+	Summary of sample sizes: 179816, 179816, 179814 
+	Resampling results:
+
+	  Accuracy   Kappa
+	  0.9313926  0    
+
+	Confusion Matrix and Statistics
+
+		  Reference
+	Prediction  FALSE   TRUE
+	     FALSE 107438   8156
+	     TRUE       1      0
+		                                  
+		       Accuracy : 0.9294          
+		         95% CI : (0.9279, 0.9309)
+	    No Information Rate : 0.9294          
+	    P-Value [Acc > NIR] : 0.5075          
+		                                  
+		          Kappa : 0               
+	 Mcnemar's Test P-Value : <2e-16          
+		                                  
+		    Sensitivity : 1.0000          
+		    Specificity : 0.0000          
+		 Pos Pred Value : 0.9294          
+		 Neg Pred Value : 0.0000          
+		     Prevalence : 0.9294          
+		 Detection Rate : 0.9294          
+	   Detection Prevalence : 1.0000          
+	      Balanced Accuracy : 0.5000          
+		                                  
+	       'Positive' Class : FALSE       
+
+
+II. Random Forest
+	a. First iteration:
+		Random Forest 
+
+		269723 samples
+		    26 predictors
+		     2 classes: 'FALSE', 'TRUE' 
+
+		No pre-processing
+		Resampling: Cross-Validated (3 fold) 
+		Summary of sample sizes: 179816, 179816, 179814 
+		Resampling results:
+
+		  Accuracy   Kappa      
+		  0.9313221  0.002368768
+
+		Tuning parameter 'mtry' was held constant at a value of 20
+
+		Confusion Matrix and Statistics
+
+			  Reference
+		Prediction  FALSE   TRUE
+		     FALSE 107419   8147
+		     TRUE      20      9
+					                  
+			       Accuracy : 0.9293          
+				 95% CI : (0.9279, 0.9308)
+		    No Information Rate : 0.9294          
+		    P-Value [Acc > NIR] : 0.5532          
+					                  
+				  Kappa : 0.0017          
+		 Mcnemar's Test P-Value : <2e-16          
+					                  
+			    Sensitivity : 0.999814        
+			    Specificity : 0.001103        
+			 Pos Pred Value : 0.929503        
+			 Neg Pred Value : 0.310345        
+			     Prevalence : 0.929443        
+			 Detection Rate : 0.929270        
+		   Detection Prevalence : 0.999749        
+		      Balanced Accuracy : 0.500459        
+					                  
+		       'Positive' Class : FALSE        
+
+
+
+	b. Second iteration:
+		Random Forest 
+
+		269723 samples
+		    26 predictors
+		     2 classes: 'FALSE', 'TRUE' 
+
+		No pre-processing
+		Resampling: Cross-Validated (3 fold) 
+		Summary of sample sizes: 179816, 179816, 179814 
+		Resampling results:
+
+		  Accuracy  Kappa      
+		  0.9314    0.000946521
+
+		Tuning parameter 'mtry' was held constant at a value of 10
+
+		Confusion Matrix and Statistics
+
+			  Reference
+		Prediction  FALSE   TRUE
+		     FALSE 107433   8156
+		     TRUE       6      0
+				                          
+			       Accuracy : 0.9294          
+				 95% CI : (0.9279, 0.9309)
+		    No Information Rate : 0.9294          
+		    P-Value [Acc > NIR] : 0.5304          
+				                          
+				  Kappa : -1e-04          
+		 Mcnemar's Test P-Value : <2e-16          
+				                          
+			    Sensitivity : 0.9999          
+			    Specificity : 0.0000          
+			 Pos Pred Value : 0.9294          
+			 Neg Pred Value : 0.0000          
+			     Prevalence : 0.9294          
+			 Detection Rate : 0.9294          
+		   Detection Prevalence : 0.9999          
+		      Balanced Accuracy : 0.5000          
+				                          
+		       'Positive' Class : FALSE           
+		                             
+
+III. Interpretation of results
+	a. Variable importance plots indicate that predictive factors are: Release Height, Spin Axis, HorizBreakPFX, Extension. 
+		See PDFs "RF First Iter Var Importance" and "RF Second Iter Var Importance"
+
+	b. Difference of actual and predicted SwingStrikes:
+		Logit Model:
+		   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+		0.00000 0.03902 0.06250 0.06835 0.09242 0.66667 
+		
+		Random Forest (2nd iteration):
+		   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+		0.00000 0.03889 0.06250 0.06832 0.09242 0.66667 
+	
+		Most differences are within 7%
+
+	c. Some of the top pitchers:
+		    PitcherId StrikeProbability Pitches
+		       100294         0.6666667       3
+		       112802         0.2941176      17
+		        95281         0.2727273      11
+		        78030         0.2606383     188
+		        99439         0.2500000       4
+		       104717         0.2222222       9
+		        78002         0.2142857      14
+		        63685         0.2115385     260
+		        76719         0.2096774     124
+
+
+
