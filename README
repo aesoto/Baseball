@@ -1,0 +1,240 @@
+EXECUTIVE SUMMARY
+
+Purpose: 
+Given that a fastball is thrown, develop a predictive model to estimate that a SwingStrike will occur.
+
+Data: 
+Trackman pitch-level data for ~500k pitches representing 30 teams playing each other over 2,394 games.  Approximately 390K of these pitches are fastballs given by 736 pitchers to 938 batters. 6.84% of these fastballs result in a swingstrike
+
+Methodology: 
+The data are examined in two ways:
+I. Logistic Regression
+II. Random Forest Analysis (two iterations)
+
+Comments:
+	Methodology:			Accuracy:	Sensitivity:	Specificity:	P-value:
+	Logit Model			0.9294 		1.0000		0.0000		0.5075
+	Random Forest - 1		0.9293		0.999184	0.001103	0.5532
+	Random Forest - 2		0.9294		0.9999		0.0000		0.5304
+
+	Consistent results across all methods which are not statistically significant.  
+	Given the rarity of the predicted outcome, next steps would
+	require further development of the model to address the imbalance in the data set.
+	However, results of the factor importance as demonstrated in both methods
+	suggest opportunities for improving/evaluating player performance.
+
+
+
+RESULTS: (represents output as detailed in the script)
+I. Logit Model:
+	Generalized Linear Model: 
+
+	269723 samples
+	    26 predictors
+	     2 classes: 'FALSE', 'TRUE' 
+
+	No pre-processing
+	Resampling: Cross-Validated (3 fold) 
+	Summary of sample sizes: 179816, 179816, 179814 
+	Resampling results:
+
+	  Accuracy   Kappa
+	  0.9313926  0    
+
+	Confusion Matrix and Statistics:
+
+		  Reference
+	Prediction  FALSE   TRUE
+	     FALSE 107438   8156
+	     TRUE       1      0
+		                                  
+		       Accuracy : 0.9294          
+		         95% CI : (0.9279, 0.9309)
+	    No Information Rate : 0.9294          
+	    P-Value [Acc > NIR] : 0.5075          
+		                                  
+		          Kappa : 0               
+	 Mcnemar's Test P-Value : <2e-16          
+		                                  
+		    Sensitivity : 1.0000          
+		    Specificity : 0.0000          
+		 Pos Pred Value : 0.9294          
+		 Neg Pred Value : 0.0000          
+		     Prevalence : 0.9294          
+		 Detection Rate : 0.9294          
+	   Detection Prevalence : 1.0000          
+	      Balanced Accuracy : 0.5000          
+		                                  
+	       'Positive' Class : FALSE
+
+	Formal Regression equation:
+	Deviance Residuals: 
+	    Min       1Q   Median       3Q      Max  
+	-1.0475  -0.4107  -0.3418  -0.2822   3.0788  
+
+	Coefficients:
+			    Estimate Std. Error z value Pr(>|z|)    
+	(Intercept)       -8.410e+00  3.468e+00  -2.425 0.015308 *  
+	HomeTeamId         1.268e-03  5.535e-04   2.291 0.021986 *  
+	AwayTeamId         4.898e-04  5.431e-04   0.902 0.367141    
+	Inning             2.449e-02  3.231e-03   7.579 3.48e-14 ***
+	InningTop          2.922e-02  1.543e-02   1.894 0.058266 .  
+	PlateAppearance    3.909e-02  5.093e-03   7.675 1.65e-14 ***
+	PitchOfPA         -1.065e-01  1.660e-02  -6.420 1.36e-10 ***
+	Balls              1.500e-01  1.941e-02   7.730 1.07e-14 ***
+	Strikes            3.568e-01  2.196e-02  16.249  < 2e-16 ***
+	BatterId           1.408e-06  2.546e-07   5.530 3.20e-08 ***
+	PitcherId         -7.304e-07  2.812e-07  -2.597 0.009391 ** 
+	CatcherId          1.219e-07  2.869e-07   0.425 0.670988    
+	UmpireId          -6.947e-07  1.890e-07  -3.675 0.000238 ***
+	BatSideR           1.239e-01  1.615e-02   7.674 1.67e-14 ***
+	PitchHandR        -1.600e-01  5.022e-02  -3.186 0.001443 ** 
+	PitcherSetWindup  -1.025e-01  2.010e-02  -5.097 3.46e-07 ***
+	ReleaseSpeed       4.538e-02  1.772e-02   2.562 0.010414 *  
+	PitchTimeToPlate   1.180e+00  3.997e+00   0.295 0.767740    
+	SpinAxis          -2.368e-04  1.751e-04  -1.353 0.176122    
+	SpinRate           5.966e-04  5.036e-05  11.845  < 2e-16 ***
+	HorzBreakPFX       1.954e-03  3.629e-03   0.538 0.590268    
+	VertBreakPFX      -1.749e-02  4.099e-03  -4.267 1.98e-05 ***
+	ReleaseHeight      1.679e-01  2.206e-02   7.611 2.73e-14 ***
+	ReleaseSide        2.508e-02  1.399e-02   1.792 0.073081 .  
+	Extension          5.263e-02  3.776e-02   1.394 0.163371    
+	VertApproachAngle  3.267e-01  8.976e-03  36.399  < 2e-16 ***
+	HorzApproachAngle  1.230e-02  8.919e-03   1.379 0.167991    
+	---
+	Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	(Dispersion parameter for binomial family taken to be 1)
+
+	    Null deviance: 134873  on 269722  degrees of freedom
+	Residual deviance: 130052  on 269696  degrees of freedom
+	AIC: 130106
+
+	Number of Fisher Scoring iterations: 5
+
+
+II. Random Forest
+	a. First iteration:
+		Random Forest 
+
+		269723 samples
+		    26 predictors
+		     2 classes: 'FALSE', 'TRUE' 
+
+		No pre-processing
+		Resampling: Cross-Validated (3 fold) 
+		Summary of sample sizes: 179816, 179816, 179814 
+		Resampling results:
+
+		  Accuracy   Kappa      
+		  0.9313221  0.002368768
+
+		Tuning parameter 'mtry' was held constant at a value of 20
+
+		Confusion Matrix and Statistics
+
+			  Reference
+		Prediction  FALSE   TRUE
+		     FALSE 107419   8147
+		     TRUE      20      9
+					                  
+			       Accuracy : 0.9293          
+				 95% CI : (0.9279, 0.9308)
+		    No Information Rate : 0.9294          
+		    P-Value [Acc > NIR] : 0.5532          
+					                  
+				  Kappa : 0.0017          
+		 Mcnemar's Test P-Value : <2e-16          
+					                  
+			    Sensitivity : 0.999814        
+			    Specificity : 0.001103        
+			 Pos Pred Value : 0.929503        
+			 Neg Pred Value : 0.310345        
+			     Prevalence : 0.929443        
+			 Detection Rate : 0.929270        
+		   Detection Prevalence : 0.999749        
+		      Balanced Accuracy : 0.500459        
+					                  
+		       'Positive' Class : FALSE        
+
+
+
+	b. Second iteration:
+		Random Forest 
+
+		269723 samples
+		    26 predictors
+		     2 classes: 'FALSE', 'TRUE' 
+
+		No pre-processing
+		Resampling: Cross-Validated (3 fold) 
+		Summary of sample sizes: 179816, 179816, 179814 
+		Resampling results:
+
+		  Accuracy  Kappa      
+		  0.9314    0.000946521
+
+		Tuning parameter 'mtry' was held constant at a value of 10
+
+		Confusion Matrix and Statistics
+
+			  Reference
+		Prediction  FALSE   TRUE
+		     FALSE 107433   8156
+		     TRUE       6      0
+				                          
+			       Accuracy : 0.9294          
+				 95% CI : (0.9279, 0.9309)
+		    No Information Rate : 0.9294          
+		    P-Value [Acc > NIR] : 0.5304          
+				                          
+				  Kappa : -1e-04          
+		 Mcnemar's Test P-Value : <2e-16          
+				                          
+			    Sensitivity : 0.9999          
+			    Specificity : 0.0000          
+			 Pos Pred Value : 0.9294          
+			 Neg Pred Value : 0.0000          
+			     Prevalence : 0.9294          
+			 Detection Rate : 0.9294          
+		   Detection Prevalence : 0.9999          
+		      Balanced Accuracy : 0.5000          
+				                          
+		       'Positive' Class : FALSE           
+		                             
+
+
+Further interpretation of results (also detailed in the script)
+	a. Variable importance plots indicate that predictive factors are: Release Height, Spin Axis, HorizBreakPFX, Extension. 
+		See PDFs "RF First Iter Var Importance" and "RF Second Iter Var Importance"
+
+	b. Summary of difference of actual and predicted SwingStrikes:
+		Under logistical regression:
+			   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+			0.00000 0.03902 0.06250 0.06835 0.09242 0.66667 
+
+
+		Under random forest - 2nd iteration:
+			   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+			0.00000 0.03889 0.06250 0.06832 0.09242 0.66667 
+	
+		Most differences are within 7%, results consistent between models
+
+	c. Some of the top pitchers:
+		    PitcherId StrikeProbability Pitches
+		       100294         0.6666667       3
+		       112802         0.2941176      17
+		        95281         0.2727273      11
+		        78030         0.2606383     188
+		        99439         0.2500000       4
+		       104717         0.2222222       9
+		        78002         0.2142857      14
+		        63685         0.2115385     260
+		        76719         0.2096774     124
+
+		Pitchers with high strike rates are worth a closer look.
+
+
+
+
+
