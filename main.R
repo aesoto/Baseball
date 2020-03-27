@@ -1,12 +1,10 @@
 #
 # COMMENTS:
-#     Applicant: 6515927465
 #     Also part of this package are:
 #       - PitchFunc.R: functions to run main
 #       - README.TXT: I write an executive summary and paste some output from the script
 #       - Image of variable importance plot (2 versions)
-#       - Image of proposed graphical user interface (GUI) - Screenshot.jpg
-#     All of the above reside on my GitHub page: https://bit.ly/2zwSDZB (my name is revealed here)
+#     All of the above reside on my GitHub page: https://bit.ly/2zwSDZB
 #
 
 library(randomForest)
